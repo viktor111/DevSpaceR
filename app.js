@@ -9,6 +9,12 @@ const authRouter = require('./routes/auth')
 
 const app = express();
 
+const Firebase = require("./Config/firebaseAuth");
+let serviceAccount = require("./Config/devspacer-85c37-firebase-adminsdk-v8iq9-579733c529.json")
+
+let FirebaseContext = new Firebase(serviceAccount);
+FirebaseContext.connect()
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
