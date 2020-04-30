@@ -12,7 +12,8 @@ class Auth {
         })
     }
 
-      async EmailExist(email, res) {
+       async EmailExist(email) {
+
         let dbContext = new DbContext().Initialize("users");
 
         let toReturn =false;
@@ -27,7 +28,10 @@ class Auth {
             console.log(counter);
 
             if(counter !== 0){
-                return res.render("Auth/Register", {error: "Email already exists!"})            
+                return promise =true;
+            }
+            else{
+                return promise =false;
             }
         });
 

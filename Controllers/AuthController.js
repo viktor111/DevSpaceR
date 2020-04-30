@@ -10,17 +10,19 @@ const GetLogin = (req, res) => {
     res.render("Auth/Login");
 }
 
-const  PostRegister = async (req, res) => {
+const PostRegister = async (req, res) => {
 
     let authService = new AuthService();
 
     let { Username, Email, Password } = req.body;
     console.log(`${Username} , ${Email} , ${Password}`);
-    await authService.EmailExist(Email, res);
+
+    console.log(await authService.EmailExist(Email, res));
 
     // if(authService.EmailExist(Email)){
     //     res.render("Auth/Register", { error: "Email already exists!" }) 
     // }
+
     if (Password.length < 4) {
         res.render("Auth/Register", { error: "Password too small!" })
     }
