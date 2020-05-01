@@ -1,7 +1,9 @@
 const DbContext = require('../Config/dbContext')
 
 class Auth {
+
     SaveUser(User) {
+
         let dbContext = new DbContext().Initialize("users");
 
         dbContext.add({
@@ -17,23 +19,29 @@ class Auth {
         let dbContext = new DbContext().Initialize("users");
 
         let toReturn =false;
-        let counter = 0;
+        var counter = 0;
         let promise = dbContext.where("email", "==", email).limit(1).get()
         .then((user) => {
-            user.forEach(() => {
+            
+            user.forEach(() => {                
                 counter++;
             })
+        })
+        .catch(() => {
+            
         })
         .finally(() => {
             console.log(counter);
 
             if(counter !== 0){
-                return promise =true;
+                console.log("True")
             }
             else{
-                return promise =false;
+                console.log("False")
             }
         });
+
+        return counter;
 
     }
 }
