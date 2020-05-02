@@ -1,4 +1,6 @@
 const DbContext = require('../Config/dbContext')
+const jwt = require("jsonwebtoken")
+
 
 class Auth {
 
@@ -13,7 +15,16 @@ class Auth {
             created: User.created,
             isAdmin: true
         })
-    }       
+    }  
+    
+    JWTAuthenticate(credentials, expirySec, jwtKey){
+        const token = jwt.sign(credentials, jwtKey, {
+            algorithm: "HS256",
+            expiresIn: expirySec
+        })
+
+        return token;
+    }
 }
 
 module.exports = Auth;

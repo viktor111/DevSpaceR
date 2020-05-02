@@ -2,6 +2,8 @@ const AuthService = require('../Services/Auth')
 const User = require('../Models/User')
 const DbContext = require('../Config/dbContext')
 
+const jwtKey = "auth";
+
 
 const GetRegister = (req, res) => {
     res.render("Auth/Register");
@@ -14,30 +16,30 @@ const GetLogin = (req, res) => {
 const PostRegister = async (req, res) => {
     let dbContext = new DbContext().Initialize("users");
 
-    
+
     let authService = new AuthService();
 
     let { Username, Email, Password } = req.body;
 
-        let toReturn =false;
-        var counter = 0;
+    let toReturn = false;
+    var counter = 0;
 
-        let promise = dbContext.where("email", "==", Email).limit(1).get()
+    let promise = dbContext.where("email", "==", Email).limit(1).get()
         .then((user) => {
-            
-            user.forEach(() => {                
+
+            user.forEach(() => {
                 counter++;
             })
 
-            if(counter !== 0){
+            if (counter !== 0) {
                 console.log(`${Username} , ${Email} , ${Password}`);
-                res.render("Auth/Register", {error: "Email already exists!"})
+                res.render("Auth/Register", { error: "Email already exists!" })
                 res.end();
             }
 
         })
         .catch(() => {
-            
+
         })
         .finally(() => {
             console.log(counter);
@@ -47,7 +49,7 @@ const PostRegister = async (req, res) => {
             }
 
             else {
-        
+
                 let user = new User(Username, Email, Password, new Date());
                 authService.SaveUser(user);
                 res.redirect("/");
@@ -60,7 +62,9 @@ const PostLogin = (req, res) => {
     let dbContext = new DbContext().Initialize("users");
 
 
-    let {Username, Password} = req.body;
+    let authService = new AuthService();
+
+    let { Username, Password } = req.body;
 
     let counter = 0;
 
@@ -71,42 +75,41 @@ const PostLogin = (req, res) => {
     let password;
 
     querry.get()
-    .then((document) => {
-        console.log("Username" + " " + Username)
-        document.forEach((user) => {
+        .then((document) => {
+            console.log("Username" + " " + Username)
+            document.forEach((user) => {
 
-            username = user['_fieldsProto']['username']['stringValue'];
-            admin = user['_fieldsProto']['isAdmin']['booleanValue'];
-            password = user['_fieldsProto']['password']['stringValue'];
-            counter++;
+                username = user['_fieldsProto']['username']['stringValue'];
+                admin = user['_fieldsProto']['isAdmin']['booleanValue'];
+                password = user['_fieldsProto']['password']['stringValue'];
+                counter++;
+            })
+            console.log("Counter" + " " + counter)
+            if (password !== Password) {
+                res.render("Auth/Login", { error: 'Wrong password!' });
+                res.end();
+            }
+            if (counter === 0) {
+                res.render("Auth/Register", { error: 'User does not exist!' });
+                res.end();
+            }
+            else {
+                const expirySec = 30000;
+
+                let token = authService.JWTAuthenticate({ username, admin }, expirySec, jwtKey);
+
+                console.log(token);
+
+                res.cookie("token", token, {
+                    maxAge: expirySec * 1000000
+                })
+                res.redirect("/")
+                res.end();
+            }
         })
-        console.log("Counter" + " "+counter)
-        if (password !== Password) {
-            res.render("Auth/Login", {error: 'Wrong password!'});
-            res.end();
-        }
-        if(counter === 0) {
-            res.render("Auth/Register", {error: 'User does not exist!'});
-            res.end();
-        }
-    })
-    .finally((document) => {
-
-        if(admin){
-            req.session.isAdmin = true;
-            console.log('Logged in as admin');
-        }
-
-        req.session.isLoggedin = true;
-         //req.session.usernmae = username;
-
-        req.session.save((err) => {
-             console.log(err);
-             res.redirect('/')
-         })
-
-        res.redirect('/')
-    })
+        .finally((document) => {
+            res.redirect('/')
+        })
 }
 
 module.exports = {
