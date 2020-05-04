@@ -2,14 +2,14 @@ const jwt = require('jsonwebtoken')
 
 const Index = (req, res) => {
     const token = req.cookies.token;
+    
     if (!token) {
-        res.render('index');
+        res.render('index', {logged: false});
     }
-    else {
+    else {       
         let payload = jwt.verify(token, 'auth')
-        res.render('index', { title: payload.username, admin: payload.admin });
+        res.render('index', { title: payload.username, admin: payload.admin, logged: true});
     }
-
 }
 
 module.exports = {

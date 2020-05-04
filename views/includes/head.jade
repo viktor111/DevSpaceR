@@ -1,8 +1,15 @@
+if logged
+  div(class="user-menu")
+      div(class="username")
+          a(href="/User/")=username
+        
 div(class="auth-menu")
-        div(class="auth-item")
-          a(href="/Auth/Register") Register
-        div(class="auth-item")
-          a(href= "/Auth/Login") Login
-        div(class="auth-item")
-        form(action="/Auth/Logout", method="post")
-          input(type="submit", value="Logout")
+      if !logged        
+          div(class="auth-item")
+            a(href="/Auth/Register") Register
+          div(class="auth-item")
+            a(href= "/Auth/Login") Login
+      if logged
+          div(class="auth-item")
+          form(action="/Auth/Logout", method="post")
+            input(type="submit", value="Logout")
