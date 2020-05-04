@@ -112,9 +112,16 @@ const PostLogin = (req, res) => {
         })
 }
 
+const Logout = (req, res) => {
+    res.clearCookie("token");
+    res.redirect('/Auth/Login')
+    res.end();
+}
+
 module.exports = {
     GetRegister,
     GetLogin,
     PostRegister,
-    PostLogin
+    PostLogin,
+    Logout
 }

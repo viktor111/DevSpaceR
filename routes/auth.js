@@ -7,5 +7,6 @@ router.get('/Login', AuthController.GetLogin);
 
 router.post('/Register', AuthController.PostRegister);
 router.post('/Login', AuthController.PostLogin);
+router.post('/Logout', AuthController.Logout);
 
 module.exports = router;
