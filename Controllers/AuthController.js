@@ -31,12 +31,7 @@ const PostRegister = async (req, res) => {
                 counter++;
             })
 
-            if (counter !== 0) {
-                console.log(`${Username} , ${Email} , ${Password}`);
-                res.render("Auth/Register", { error: "Email already exists!" })
-                return res.end();
 
-            }
 
         })
         .catch(() => {
@@ -44,7 +39,14 @@ const PostRegister = async (req, res) => {
         })
         .finally(() => {
             console.log(counter);
-            if (Password.length < 4) {
+
+            if (counter !== 0) {
+                console.log(`${Username} , ${Email} , ${Password}`);
+                res.render("Auth/Register", { error: "Email already exists!" })
+                return res.end();
+            }
+
+            else if (Password.length < 4) {
                 res.render("Auth/Register", { error: "Password too small!" })
                 return res.end();
             }
