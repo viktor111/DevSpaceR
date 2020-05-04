@@ -6,11 +6,11 @@ const jwtKey = "auth";
 
 
 const GetRegister = (req, res) => {
-    res.render("Auth/Register");
+    res.render("Auth/Register", {title: "Register"});
 }
 
 const GetLogin = (req, res) => {
-    res.render("Auth/Login");
+    res.render("Auth/Login", {title: "Login"});
 }
 
 const PostRegister = async (req, res) => {
