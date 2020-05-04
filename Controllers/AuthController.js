@@ -6,11 +6,11 @@ const jwtKey = "auth";
 
 
 const GetRegister = (req, res) => {
-    res.render("Auth/Register", {title: "Register"});
+    res.render("Auth/Register", { title: "Register" });
 }
 
 const GetLogin = (req, res) => {
-    res.render("Auth/Login", {title: "Login"});
+    res.render("Auth/Login", { title: "Login" });
 }
 
 const PostRegister = async (req, res) => {
@@ -34,7 +34,8 @@ const PostRegister = async (req, res) => {
             if (counter !== 0) {
                 console.log(`${Username} , ${Email} , ${Password}`);
                 res.render("Auth/Register", { error: "Email already exists!" })
-                res.end();
+                return res.end();
+
             }
 
         })
@@ -45,7 +46,7 @@ const PostRegister = async (req, res) => {
             console.log(counter);
             if (Password.length < 4) {
                 res.render("Auth/Register", { error: "Password too small!" })
-                res.end()
+                return res.end();
             }
 
             else {
