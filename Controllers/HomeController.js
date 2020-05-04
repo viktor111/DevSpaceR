@@ -8,7 +8,7 @@ const Index = (req, res) => {
     }
     else {       
         let payload = jwt.verify(token, 'auth')
-        res.render('index', { title: payload.username, admin: payload.admin, logged: true});
+        res.render('index', { username: payload.username, admin: payload.admin, logged: true});
     }
 }
 
