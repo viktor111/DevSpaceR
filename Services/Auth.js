@@ -8,6 +8,7 @@ class Auth {
     SaveUser(User) {
 
         let dbContext = new DbContext().Initialize("users");
+        
         bcrypt.hash(User.password, 12, (err, hash) => {
 
             if (err) return console.log(err);
