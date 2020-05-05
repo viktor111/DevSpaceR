@@ -1,17 +1,17 @@
-if logged
-  div(class="user-menu")
-      div(class="username")
-          a(href="/User/")=username
-if admin
-  a(href="/Admin/Index") Admin Menu
-div(class="auth-menu")
-    div(class="row")
-        if !logged       
+div(class="header")
+  div(class="auth-menu")
+      div(class="row")
+          if !logged       
+              div(class="auth-item col-lg-4 col-md-4 col-sm-12")
+                a(href="/Auth/Register") Register
+              div(class="auth-item col-lg-4 col-md-4 col-sm-12")
+                a(href= "/Auth/Login") Login
+          if logged                               
+            div(class="username col-lg-4 col-md-4 col-sm-12")
+              a(href="/User/")=username                
+            if admin
+              div(class="admin col-lg-4 col-md-4 col-sm-12")
+                a(href="/Admin/Index") Admin Menu
             div(class="auth-item col-lg-4 col-md-4 col-sm-12")
-              a(href="/Auth/Register") Register
-            div(class="auth-item col-lg-4 col-md-4 col-sm-12")
-              a(href= "/Auth/Login") Login
-        if logged
-            div(class="auth-item col-lg-4 col-md-4 col-sm-12")
-            form(action="/Auth/Logout", method="post")
-              input(type="submit", value="Logout")
+                form(action="/Auth/Logout", method="post")
+                  input(type="submit", value="Logout") 

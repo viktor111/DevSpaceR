@@ -1,6 +1,9 @@
 const AuthService = require('../Services/Auth')
 const User = require('../Models/User')
 const DbContext = require('../Config/dbContext')
+const Encrypter = require('../Helpers/Encrypter')
+const bcript = require('bcrypt');
+
 
 const jwtKey = "auth";
 
@@ -30,16 +33,13 @@ const PostRegister = async (req, res) => {
             user.forEach(() => {
                 counter++;
             })
-
-
-
         })
         .catch(() => {
 
         })
         .finally(() => {
             console.log(counter);
-
+            
             if (counter !== 0) {
                 console.log(`${Username} , ${Email} , ${Password}`);
                 res.render("Auth/Register", { error: "Email already exists!" })
@@ -63,8 +63,6 @@ const PostRegister = async (req, res) => {
 
 const PostLogin = (req, res) => {
     let dbContext = new DbContext().Initialize("users");
-
-
     let authService = new AuthService();
 
     let { Username, Password } = req.body;
@@ -87,11 +85,17 @@ const PostLogin = (req, res) => {
                 password = user['_fieldsProto']['password']['stringValue'];
                 counter++;
             })
-            console.log("Counter" + " " + counter)
-            if (password !== Password) {
-                res.render("Auth/Login", { error: 'Wrong password!' });
-                res.end();
-            }
+            
+            bcript.compare(password, hashedPassword, (err, response) => {
+
+                if (!response) {
+                    res.render("Auth/Login", { error: 'Wrong password!' });
+                    return res.end();
+                }
+            });
+
+            console.log(decryptedPassword)
+           
             if (counter === 0) {
                 res.render("Auth/Register", { error: 'User does not exist!' });
                 res.end();
