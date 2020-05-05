@@ -1,7 +1,6 @@
 const AuthService = require('../Services/Auth')
 const User = require('../Models/User')
 const DbContext = require('../Config/dbContext')
-const Encrypter = require('../Helpers/Encrypter')
 const bcript = require('bcrypt');
 
 
@@ -85,17 +84,19 @@ const PostLogin = (req, res) => {
                 password = user['_fieldsProto']['password']['stringValue'];
                 counter++;
             })
-            
-            bcript.compare(password, hashedPassword, (err, response) => {
 
-                if (!response) {
-                    res.render("Auth/Login", { error: 'Wrong password!' });
-                    return res.end();
-                }
-            });
+            bcript.hash(password, 12).then((hash) => {
 
-            console.log(decryptedPassword)
-           
+                bcript.compare(password, hash, (err, response) => {
+
+                    if (!response) {
+                        res.render("Auth/Login", { error: 'Wrong password!' });
+                        return res.end();
+                    }
+                });
+
+            })
+                                   
             if (counter === 0) {
                 res.render("Auth/Register", { error: 'User does not exist!' });
                 res.end();
