@@ -1,5 +1,6 @@
-const DbContext = require('../Config/dbContext')
-const jwt = require("jsonwebtoken")
+const DbContext = require('../Config/dbContext');
+const Mailer = require("../Helpers/Mailer");
+const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 
 
@@ -7,6 +8,9 @@ class Auth {
 
     SaveUser(User) {
 
+        let mailer = new Mailer();
+        mailer.SendEmail(User.email, "test", "subject test");
+        
         let dbContext = new DbContext().Initialize("users");
         
         bcrypt.hash(User.password, 12, (err, hash) => {
