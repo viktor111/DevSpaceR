@@ -183,8 +183,14 @@ const PostResetPassword = (req, res) => {
                             res.render("Auth/ResetPass", { error: "Wrong key!" })
                             res.end()
                         }
+                        else if (NewPassword.length < 4) {
+                            res.render("Auth/ResetPass", { error: "Password too small!" })
+                            return res.end();
+                        }
                         else {
+                            let newKey = KeyGenerate(9,0)
                             dbContext.doc(id).update({ password: hash });
+                            dbContext.doc(id).update({ key: newKey });
                             res.render("Auth/ResetPass", { error: "Password changed!" })
                             res.end()
                         }

@@ -7,16 +7,20 @@ block content
                 p= error
             form(action="/Auth/SendResetEmail", method="post")
                 div(class="col-lg-4 col-md-4 col-sm-12")
+                    label(for="Email") Email
                     input(required, type="email", name="Email")
                 div(class="col-lg-4 col-md-4 col-sm-12")
                     input(type="submit" value="Send Email")
                 
             form(action="/Auth/ResetPassword", method="post")  
                 div(class="col-lg-4 col-md-4 col-sm-12")
+                    label(for="Email") Email
                     input(required, type="email", name="Email")      
                 div(class="col-lg-4 col-md-4 col-sm-12")
+                    label(for="Code") Key
                     input(required, type="text", name="Code")
                 div(class="col-lg-4 col-md-4 col-sm-12")
+                    label(for="NewPassword") New Password
                     input(required, type="text", name="NewPassword")
                 div(class="col-lg-4 col-md-4 col-sm-12")
                     input(required, type="submit", value="Reset Password")
