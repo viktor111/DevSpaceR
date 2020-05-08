@@ -1,14 +1,20 @@
-div(class="jumbotron")
-    div(class="row")
+extends ../layout
 
-        form(action="/Auth/SendResetEmail", method="post")
-            div(class="col-lg-4 col-md-4 col-sm-12")
-                input(type="", name="Email")
-            div(class="col-lg-4 col-md-4 col-sm-12")
-                input(type="submit" value="Send Email")
+block content
+    div(class="jumbotron")
+        div(class="row")
+             div(class="error-box")
+                p= error
+            form(action="/Auth/SendResetEmail", method="post")
+                div(class="col-lg-4 col-md-4 col-sm-12")
+                    input(required, type="email", name="Email")
+                div(class="col-lg-4 col-md-4 col-sm-12")
+                    input(type="submit" value="Send Email")
                 
-        form(action="/Auth/ResetPassword", method="post")        
-            div(class="col-lg-4 col-md-4 col-sm-12")
-                input(type="text", name="Code")
-            div(class="col-lg-4 col-md-4 col-sm-12")
-                input(type="submit", value="Reset Password")
+            form(action="/Auth/ResetPassword", method="post")        
+                div(class="col-lg-4 col-md-4 col-sm-12")
+                    input(required, type="text", name="Code")
+                div(class="col-lg-4 col-md-4 col-sm-12")
+                    input(required, type="text", name="NewPassword")
+                div(class="col-lg-4 col-md-4 col-sm-12")
+                    input(required, type="submit", value="Reset Password")

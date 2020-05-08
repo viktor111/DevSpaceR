@@ -1,5 +1,6 @@
 const AuthService = require('../Services/Auth')
 const User = require('../Models/User')
+const Mailer = require("../Helpers/Mailer");
 const DbContext = require('../Config/dbContext')
 const bcript = require('bcrypt');
 
@@ -11,9 +12,14 @@ const GetRegister = (req, res) => {
     res.render("Auth/Register", { title: "Register" });
 }
 
+const GetResetPassword = (req, res) => {
+    res.render("Auth/ResetPass", { title: "Reset Password" })
+}
+
 const GetLogin = (req, res) => {
     res.render("Auth/Login", { title: "Login" });
 }
+
 
 const PostRegister = async (req, res) => {
     let dbContext = new DbContext().Initialize("users");
@@ -38,7 +44,7 @@ const PostRegister = async (req, res) => {
         })
         .finally(() => {
             console.log(counter);
-            
+
             if (counter !== 0) {
                 console.log(`${Username} , ${Email} , ${Password}`);
                 res.render("Auth/Register", { error: "Email already exists!" })
@@ -96,7 +102,7 @@ const PostLogin = (req, res) => {
                 });
 
             })
-                                   
+
             if (counter === 0) {
                 res.render("Auth/Register", { error: 'User does not exist!' });
                 res.end();
@@ -126,10 +132,45 @@ const Logout = (req, res) => {
     res.end();
 }
 
+const SendResetEmail = (req, res) => {
+    let dbContext = new DbContext().Initialize("users");
+
+    let { Email } = req.body;    
+    let querry = dbContext.where('email', '==', Email);
+
+    querry.get()
+    .then((document) => {
+        if(!document){
+            res.render("Auth/ResetPass", {error: "Email dosent exist!"});
+            res.end();
+        }   
+        else{
+            let mailer = new Mailer();
+            let code;
+
+            document.forEach((user) => {
+                code = user['_fieldsProto']['key']['stringValue'];
+            })
+            mailer.SendEmail(Email, code, "DevSpaceR password reset code");
+            res.render("Auth/ResetPass", {error: "Email sent!"});
+            res.end();
+        }
+    })
+
+    
+}
+
+const PostResetPassword = (req, res) => {
+    let { Code, NewPassoword } = req.body;
+}
+
 module.exports = {
     GetRegister,
     GetLogin,
+    GetResetPassword,
     PostRegister,
     PostLogin,
-    Logout
+    PostResetPassword,
+    Logout,
+    SendResetEmail
 }

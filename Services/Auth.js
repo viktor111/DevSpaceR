@@ -10,7 +10,8 @@ class Auth {
     SaveUser(User) {
 
         let mailer = new Mailer();
-        mailer.SendEmail(User.email, "<h1>test</h1>", "subject test");
+        const thankMessge = "Thank you for registering to DevSpaceR!"
+        mailer.SendEmail(User.email, thankMessge, thankMessge);
 
         let randomKey = KeyGenerate(9, 0);
 
@@ -41,6 +42,10 @@ class Auth {
         })
 
         return token;
+    }
+
+    ResetPassword(){
+        
     }
 }
 
