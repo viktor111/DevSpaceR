@@ -83,7 +83,6 @@ const PostLogin = (req, res) => {
 
     querry.get()
         .then((document) => {
-            console.log("Username" + " " + Username)
             document.forEach((user) => {
 
                 username = user['_fieldsProto']['username']['stringValue'];
@@ -92,39 +91,41 @@ const PostLogin = (req, res) => {
                 counter++;
             })
 
-            bcript.hash(password, 12).then((hash) => {
-
-                bcript.compare(password, hash, (err, response) => {
-
-                    if (!response) {
-                        res.render("Auth/Login", { error: 'Wrong password!' });
-                        return res.end();
-                    }
-                });
-
-            })
 
             if (counter === 0) {
                 res.render("Auth/Register", { error: 'User does not exist!' });
                 res.end();
             }
-            else {
-                const expirySec = 30000;
 
-                let token = authService.JWTAuthenticate({ username, admin }, expirySec, jwtKey);
-
-                console.log(token);
-
-                res.cookie("token", token, {
-                    maxAge: expirySec * 1000000
-                })
-                res.redirect("/")
-                res.end();
-            }
         })
         .finally((document) => {
-            res.redirect('/')
+
+            bcript.compare(Password, password, (err, response) => {
+
+          
+
+                if (!response) {
+                    res.render("Auth/Login", { error: 'Wrong password!' });
+                    res.end();
+                }
+                else {
+                    const expirySec = 30000;
+
+                    console.log(response)
+                    console.log(Password)
+
+                    let token = authService.JWTAuthenticate({ username, admin }, expirySec, jwtKey);
+
+                    res.cookie("token", token, {
+                        maxAge: expirySec * 1000000
+                    })
+                    res.redirect("/")
+                    res.end();
+                }
+            });
+
         })
+
 }
 
 const Logout = (req, res) => {
