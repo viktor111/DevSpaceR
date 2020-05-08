@@ -11,7 +11,9 @@ block content
                 div(class="col-lg-4 col-md-4 col-sm-12")
                     input(type="submit" value="Send Email")
                 
-            form(action="/Auth/ResetPassword", method="post")        
+            form(action="/Auth/ResetPassword", method="post")  
+                div(class="col-lg-4 col-md-4 col-sm-12")
+                    input(required, type="email", name="Email")      
                 div(class="col-lg-4 col-md-4 col-sm-12")
                     input(required, type="text", name="Code")
                 div(class="col-lg-4 col-md-4 col-sm-12")

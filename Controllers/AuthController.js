@@ -2,6 +2,7 @@ const AuthService = require('../Services/Auth')
 const User = require('../Models/User')
 const Mailer = require("../Helpers/Mailer");
 const DbContext = require('../Config/dbContext')
+const KeyGenerate = require("../Helpers/RandomNum")
 const bcript = require('bcrypt');
 
 
@@ -135,33 +136,62 @@ const Logout = (req, res) => {
 const SendResetEmail = (req, res) => {
     let dbContext = new DbContext().Initialize("users");
 
-    let { Email } = req.body;    
+    let { Email } = req.body;
     let querry = dbContext.where('email', '==', Email);
 
     querry.get()
-    .then((document) => {
-        if(!document){
-            res.render("Auth/ResetPass", {error: "Email dosent exist!"});
-            res.end();
-        }   
-        else{
-            let mailer = new Mailer();
-            let code;
+        .then((document) => {
+            if (!document) {
+                res.render("Auth/ResetPass", { error: "Email dosent exist!" });
+                res.end();
+            }
+            else {
+                let mailer = new Mailer();
+                let code;
 
-            document.forEach((user) => {
-                code = user['_fieldsProto']['key']['stringValue'];
-            })
-            mailer.SendEmail(Email, code, "DevSpaceR password reset code");
-            res.render("Auth/ResetPass", {error: "Email sent!"});
-            res.end();
-        }
-    })
+                document.forEach((user) => {
+                    code = user['_fieldsProto']['key']['stringValue'];
+                })
+                mailer.SendEmail(Email, code, "DevSpaceR password reset code");
+                res.render("Auth/ResetPass", { error: "Email sent!" });
+                res.end();
+            }
+        })
 
-    
+
 }
 
 const PostResetPassword = (req, res) => {
-    let { Code, NewPassoword } = req.body;
+    let { Code, NewPassword, Email } = req.body;
+    let dbContext = new DbContext().Initialize("users");
+    let dbCode;
+    let querry = dbContext.where('email', '==', Email);
+    bcript.hash(NewPassword, 12, (err, hash) => {
+        querry.get()
+            .then((document) => {
+                if (!document) {
+                    res.render("Auth/ResetPass", { error: "Email dosent exist!" });
+                    res.end();
+                }
+                else {
+                    document.forEach((user) => {
+                        const id = user.id;
+                        dbCode = user['_fieldsProto']['key']['stringValue'];
+                        if (dbCode !== Code) {
+                            console.log(dbCode)
+                            res.render("Auth/ResetPass", { error: "Wrong key!" })
+                            res.end()
+                        }
+                        else {
+                            dbContext.doc(id).update({ password: hash });
+                            res.render("Auth/ResetPass", { error: "Password changed!" })
+                            res.end()
+                        }
+                    })
+                }
+            })
+    })
+
 }
 
 module.exports = {
