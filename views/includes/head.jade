@@ -18,3 +18,7 @@ div(class="header")
   div(class="navigation")
     nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
       a(class="navbar-brand" href="/") DevSpaceR
+      a(class="navbar-brand" href="/Project/List") Browse Projects
+        if logged
+          a(class="navbar-brand" href="/Project/Create") Create Project
+      

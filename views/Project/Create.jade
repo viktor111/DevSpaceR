@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+
+    h1 Create
+    form(class="project-form" ,action="/Project/Create", method="post")
+        div(class="error-box")
+            p= error
+        label(for="Title") Title
+
+        input(required ,class="project-form-item" ,type="text", name="Title")
+        input(required ,class="project-form-item" ,type="text", name="Description")
+        input(required ,class="project-form-item" ,type="text", name="Github")
+        input(required ,class="project-form-item" ,type="text", name="Title")
+        
+            
+        
