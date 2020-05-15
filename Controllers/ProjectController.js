@@ -35,11 +35,19 @@ const PostProject = (req, res) => {
         res.end()
     }
     else {
-       const {Title, Description, GitHub} 
+       const {Title, Description, Github, Selectpicker} = req.body 
+       console.log(Title)
+       console.log(Description)
+       console.log(Github)
+       console.log(Selectpicker)
+        
+       res.redirect("/")
+       res.end()
     }
 }
 
 module.exports = {
     GetProjects,
-    CreateProject
+    CreateProject,
+    PostProject
 }
