@@ -1,11 +1,10 @@
 class Project{
-    constructor(name, description, languages, creator, github, usersSignedUp, created) {
-        this.name = name;
+    constructor(title, description, language, creator, github, created) {
+        this.title = title;
         this.description = description;
-        this.languages = languages;
+        this.language = language;
         this.creator = creator;
         this.github = github;
-        this.usersSigned = usersSignedUp;
         this.created = created;
     }
 }

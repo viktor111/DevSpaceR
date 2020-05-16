@@ -102,7 +102,7 @@ const PostLogin = (req, res) => {
 
             bcript.compare(Password, password, (err, response) => {
 
-          
+
 
                 if (!response) {
                     res.render("Auth/Login", { error: 'Wrong password!' });
@@ -188,7 +188,7 @@ const PostResetPassword = (req, res) => {
                             return res.end();
                         }
                         else {
-                            let newKey = KeyGenerate(9,0)
+                            let newKey = KeyGenerate(9, 0)
                             dbContext.doc(id).update({ password: hash });
                             dbContext.doc(id).update({ key: newKey });
                             res.render("Auth/ResetPass", { error: "Password changed!" })
