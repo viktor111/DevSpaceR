@@ -13,6 +13,14 @@ const GetProjects = (req, res) => {
     }
     else {
         let payload = jwt.verify(token, "auth")
+        let dbContext = new DbContext().Initialize("projects")
+
+        let projects = dbContext.orderBy("title").get().then((snapshot) => {
+            snapshot.forEach((project) => {
+                console.log(project)
+            })
+        });
+    
         res.render("Project/Main", { title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
         res.end()
     }
@@ -51,6 +59,10 @@ const PostProject = (req, res) => {
         res.redirect("/")
         res.end()
     }
+}
+
+const ListProjects = (req, res) => {
+   
 }
 
 module.exports = {
