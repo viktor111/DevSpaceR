@@ -14,15 +14,37 @@ const GetProjects = (req, res) => {
     else {
         let payload = jwt.verify(token, "auth")
         let dbContext = new DbContext().Initialize("projects")
+        let projects = []
 
-        let projects = dbContext.orderBy("title").get().then((snapshot) => {
+        let projectsQuerry = dbContext.orderBy("title").get().then((snapshot) => {
             snapshot.forEach((project) => {
-                console.log(project)
+                let title = project["_fieldsProto"]["title"]["stringValue"]
+                let description = project["_fieldsProto"]["description"]["stringValue"]
+                let date = project["_fieldsProto"]["created"]["stringValue"]
+                let owner = project["_fieldsProto"]["creator"]["stringValue"]
+                let language = project["_fieldsProto"]["language"]["stringValue"]
+
+
+                let tempObj = {
+                    title: title,
+                    description: description,
+                    date: date,
+                    owner: owner,
+                    language: language
+                }
+                projects.push(tempObj)
             })
-        });
-    
-        res.render("Project/Main", { title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
-        res.end()
+
+            console.log(projects)
+
+
+        })
+            .finally(() => {
+                res.render("Project/Main", {projects: projects, title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
+                res.end()
+            });
+
+
     }
 }
 
@@ -62,7 +84,7 @@ const PostProject = (req, res) => {
 }
 
 const ListProjects = (req, res) => {
-   
+
 }
 
 module.exports = {

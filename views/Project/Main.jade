@@ -3,3 +3,9 @@ extends ../layout
 block content
 
     h1 Projects
+
+    each project in projects
+        each item in project
+            p= item
+        hr
+    
