@@ -6,46 +6,46 @@ const ProjectService = require("../Services/Project")
 
 const GetProjects = (req, res) => {
     const token = req.cookies.token;
-    if (!token) {
-        res.render("Project/Main", { logged: false })
-        res.end()
+    let dbContext = new DbContext().Initialize("projects")
+    let projects = []
 
-    }
-    else {
-        let payload = jwt.verify(token, "auth")
-        let dbContext = new DbContext().Initialize("projects")
-        let projects = []
-
-        let projectsQuerry = dbContext.orderBy("title").get().then((snapshot) => {
-            snapshot.forEach((project) => {
-                let title = project["_fieldsProto"]["title"]["stringValue"]
-                let description = project["_fieldsProto"]["description"]["stringValue"]
-                let date = project["_fieldsProto"]["created"]["stringValue"]
-                let owner = project["_fieldsProto"]["creator"]["stringValue"]
-                let language = project["_fieldsProto"]["language"]["stringValue"]
+    let projectsQuerry = dbContext.orderBy("title").get().then((snapshot) => {
+        snapshot.forEach((project) => {
+            let title = project["_fieldsProto"]["title"]["stringValue"]
+            let description = project["_fieldsProto"]["description"]["stringValue"]
+            let date = project["_fieldsProto"]["created"]["stringValue"]
+            let owner = project["_fieldsProto"]["creator"]["stringValue"]
+            let language = project["_fieldsProto"]["language"]["stringValue"]
 
 
-                let tempObj = {
-                    title: title,
-                    description: description,
-                    date: date,
-                    owner: owner,
-                    language: language
-                }
-                projects.push(tempObj)
-            })
-
-            console.log(projects)
-
-
+            let tempObj = {
+                title: title,
+                description: description,
+                date: date,
+                owner: owner,
+                language: language
+            }
+            projects.push(tempObj)
         })
-            .finally(() => {
-                res.render("Project/Main", {projects: projects, title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
+
+        console.log(projects)
+
+
+    })
+        .finally(() => {
+            if (!token) {
+                res.render("Project/Main", { projects: projects, title: "Create Project", logged: false});
                 res.end()
-            });
+            }
+            else {
+                let payload = jwt.verify(token, "auth")
+
+                res.render("Project/Main", { projects: projects, title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
+                res.end()
+            }
+        });
 
 
-    }
 }
 
 const CreateProject = (req, res) => {
