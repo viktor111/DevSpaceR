@@ -1,17 +1,17 @@
 extends ../layout
 
 block content
-    
+
 
     div(class="auth-form-container")
-        form(class="auth-form" ,action="/Auth/Login", method="post")
+        form(class="auth-form" ,action="/Auth/Login" method="post")
             div(class="error-box")
                 p= error
             label(for="Username") Username
-            input(class="auth-form-item" ,required type="text", name="Username")
+            input(class="auth-form-item" ,required type="text" name="Username")
             label(for="Password") Password
-            input(class="auth-form-item" ,required type="password", name="Password")
-            input(class="auth-form-submit" ,type="submit", value="Login")
+            input(class="auth-form-item" ,required type="password" name="Password")
+            input(class="auth-form-submit" ,type="submit" value="Login")
 
         a(class="link" ,href="/") Home
         a(href= "/Auth/ResetPassword") Forgotten Password?

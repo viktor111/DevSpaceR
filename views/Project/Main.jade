@@ -2,10 +2,12 @@ extends ../layout
 
 block content
 
-    h1 Projects
-
-    each project in projects
-        each item in project
-            p= item
-        hr
-    
+        each project in projects
+             div(class="row project")
+                 div(class="col-lg-12 col-md-12 col-sm-12")
+                    h1(class="title")
+                        a(href=project.title)=project.title
+                 div(class="col-lg-12 col-md-12 col-sm-12")
+                    p=project.language
+                div(class="col-lg-12 col-md-12 col-sm-12")
+                    p=project.created

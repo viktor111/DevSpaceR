@@ -83,12 +83,14 @@ const PostProject = (req, res) => {
     }
 }
 
-const ListProjects = (req, res) => {
-
+const ProjectDetails = (req, res) => {
+    console.log(req.params.title)
+    res.redirect("/")
 }
 
 module.exports = {
     GetProjects,
     CreateProject,
-    PostProject
+    PostProject,
+    ProjectDetails
 }
