@@ -7,5 +7,5 @@ router.get('/Create', ProjectController.CreateProject)
 
 router.post("/Create", ProjectController.PostProject)
 
-router.get('/:title', ProjectController.ProjectDetails)
+router.get('/:id', ProjectController.ProjectDetails)
 module.exports = router

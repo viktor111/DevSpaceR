@@ -16,25 +16,23 @@ const GetProjects = (req, res) => {
             let date = project["_fieldsProto"]["created"]["stringValue"]
             let owner = project["_fieldsProto"]["creator"]["stringValue"]
             let language = project["_fieldsProto"]["language"]["stringValue"]
-
+            let id = project.id
 
             let tempObj = {
                 title: title,
                 description: description,
                 date: date,
                 owner: owner,
-                language: language
+                language: language,
+                id: id
             }
             projects.push(tempObj)
         })
 
-        console.log(projects)
-
-
     })
         .finally(() => {
             if (!token) {
-                res.render("Project/Main", { projects: projects, title: "Create Project", logged: false});
+                res.render("Project/Main", { projects: projects, title: "Create Project", logged: false });
                 res.end()
             }
             else {
@@ -84,7 +82,11 @@ const PostProject = (req, res) => {
 }
 
 const ProjectDetails = (req, res) => {
-    console.log(req.params.title)
+    let dbContext = new DbContext().Initialize("projects")
+
+    let projectId = req.params.id;
+    console.log(projectId)
+
     res.redirect("/")
 }
 
