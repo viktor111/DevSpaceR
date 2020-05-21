@@ -42,8 +42,6 @@ const GetProjects = (req, res) => {
                 res.end()
             }
         });
-
-
 }
 
 const CreateProject = (req, res) => {
@@ -83,11 +81,47 @@ const PostProject = (req, res) => {
 
 const ProjectDetails = (req, res) => {
     let dbContext = new DbContext().Initialize("projects")
-
+    const token = req.cookies.token
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
     let projectId = req.params.id;
+    let projectObj = {}
     console.log(projectId)
+    let data = dbContext.doc(projectId).get().then((project) => {
+        if (!project) {
+            res.redirect('/')
+        }
+        else {
 
-    res.redirect("/")
+            let title = project["_fieldsProto"]["title"]["stringValue"]
+            let description = project["_fieldsProto"]["description"]["stringValue"]
+            let date = project["_fieldsProto"]["created"]["stringValue"]
+            let owner = project["_fieldsProto"]["creator"]["stringValue"]
+            let language = project["_fieldsProto"]["language"]["stringValue"]
+
+            let projectObjtemp = {
+                title: title,
+                description: description,
+                date: date,
+                owner: owner,
+                language: language
+            }
+
+            projectObj = projectObjtemp
+        }
+    }).finally(() => {
+        if (!token) {
+            res.render("Project/ProjectDetails", { projectObj: projectObj, logged: false })
+            res.end()
+        }
+        else {
+
+            let payload = jwt.verify(token, "auth")
+            res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin })
+            res.end()
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
 }
 
 module.exports = {
