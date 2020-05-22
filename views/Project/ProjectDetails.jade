@@ -1,6 +1,10 @@
 extends ../layout
 
 block content
-    h1= projectObj.title
-    p= projectObj.description 
-    p= projectObj.owner
+    div(class="row project-wraper")
+        div(class="col-lg-12 col-md-12 col-sm-12")
+            h1= projectObj.title
+        div(class="col-lg-12 col-md-12 col-sm-12")
+            p= projectObj.description 
+        div(class="col-lg-12 col-md-12 col-sm-12") 
+            p= projectObj.owner
