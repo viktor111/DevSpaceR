@@ -13,9 +13,12 @@ class ProjectService{
             language: Project.language,
             github: Project.github,
             created: Project.created,
-            creator: Project.creator
+            creator: Project.creator,
+            usersQueue: [],
+            usersSigned: []
         })
     }   
+    
 }
 
 module.exports = ProjectService

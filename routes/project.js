@@ -6,6 +6,7 @@ router.get('/List', ProjectController.GetProjects)
 router.get('/Create', ProjectController.CreateProject)
 
 router.post("/Create", ProjectController.PostProject)
+router.post('/Signup/:id', ProjectController.SignUpForProject)
 
 router.get('/:id', ProjectController.ProjectDetails)
 module.exports = router

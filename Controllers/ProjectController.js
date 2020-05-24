@@ -4,6 +4,14 @@ const Project = require("../Models/Project")
 const Mailer = require("../Helpers/Mailer")
 const ProjectService = require("../Services/Project")
 
+const SignUpForProject = (req, res) =>{
+    let dbContext = new DbContext().Initialize("projects");
+    let projectId = req.params.id
+    let project = dbContext.doc(projectId).update({usersQueue: ["addednew"]},{merge: true})
+    
+    res.end()
+}
+
 const GetProjects = (req, res) => {
     const token = req.cookies.token;
     let dbContext = new DbContext().Initialize("projects")
@@ -103,12 +111,14 @@ const ProjectDetails = (req, res) => {
                 description: description,
                 date: date,
                 owner: owner,
-                language: language
+                language: language,
+                projectId: projectId
             }
 
             projectObj = projectObjtemp
         }
-    }).finally(() => {
+    })
+    .finally(() => {
         if (!token) {
             res.render("Project/ProjectDetails", { projectObj: projectObj, logged: false })
             res.end()
@@ -119,8 +129,6 @@ const ProjectDetails = (req, res) => {
             res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin })
             res.end()
         }
-    }).catch((err) => {
-        console.log(err)
     })
 }
 
@@ -128,5 +136,6 @@ module.exports = {
     GetProjects,
     CreateProject,
     PostProject,
-    ProjectDetails
+    ProjectDetails,
+    SignUpForProject
 }
