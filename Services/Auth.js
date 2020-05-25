@@ -22,6 +22,7 @@ class Auth {
             if (err) return console.log(err);
 
             return dbContext.add({
+                
                 username: User.username,
                 email: User.email,
                 password: hash.toString(),

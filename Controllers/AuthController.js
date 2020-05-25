@@ -23,6 +23,7 @@ const GetLogin = (req, res) => {
 
 
 const PostRegister = async (req, res) => {
+
     let dbContext = new DbContext().Initialize("users");
 
 
@@ -34,9 +35,11 @@ const PostRegister = async (req, res) => {
     var counter = 0;
 
     let promise = dbContext.where("email", "==", Email).limit(1).get()
+
         .then((user) => {
 
             user.forEach(() => {
+
                 counter++;
             })
         })
@@ -44,15 +47,18 @@ const PostRegister = async (req, res) => {
 
         })
         .finally(() => {
+            
             console.log(counter);
 
             if (counter !== 0) {
+
                 console.log(`${Username} , ${Email} , ${Password}`);
                 res.render("Auth/Register", { error: "Email already exists!" })
                 return res.end();
             }
 
             else if (Password.length < 4) {
+
                 res.render("Auth/Register", { error: "Password too small!" })
                 return res.end();
             }
@@ -83,16 +89,19 @@ const PostLogin = (req, res) => {
 
     querry.get()
         .then((document) => {
+
             document.forEach((user) => {
 
                 username = user['_fieldsProto']['username']['stringValue'];
                 admin = user['_fieldsProto']['isAdmin']['booleanValue'];
                 password = user['_fieldsProto']['password']['stringValue'];
+
                 counter++;
             })
 
 
             if (counter === 0) {
+
                 res.render("Auth/Register", { error: 'User does not exist!' });
                 res.end();
             }
@@ -105,10 +114,12 @@ const PostLogin = (req, res) => {
 
 
                 if (!response) {
+
                     res.render("Auth/Login", { error: 'Wrong password!' });
                     res.end();
                 }
                 else {
+
                     const expirySec = 30000;
 
                     console.log(response)
@@ -129,31 +140,39 @@ const PostLogin = (req, res) => {
 }
 
 const Logout = (req, res) => {
+
     res.clearCookie("token");
     res.redirect('/Auth/Login')
     res.end();
 }
 
 const SendResetEmail = (req, res) => {
+
     let dbContext = new DbContext().Initialize("users");
 
     let { Email } = req.body;
     let querry = dbContext.where('email', '==', Email);
 
     querry.get()
+
         .then((document) => {
+
             if (!document) {
+
                 res.render("Auth/ResetPass", { error: "Email dosent exist!" });
                 res.end();
             }
             else {
+
                 let mailer = new Mailer();
                 let code;
 
                 document.forEach((user) => {
                     code = user['_fieldsProto']['key']['stringValue'];
                 })
+
                 mailer.SendEmail(Email, code, "DevSpaceR password reset code");
+
                 res.render("Auth/ResetPass", { error: "Email sent!" });
                 res.end();
             }
@@ -163,34 +182,51 @@ const SendResetEmail = (req, res) => {
 }
 
 const PostResetPassword = (req, res) => {
+
     let { Code, NewPassword, Email } = req.body;
+
     let dbContext = new DbContext().Initialize("users");
+
     let dbCode;
     let querry = dbContext.where('email', '==', Email);
+
     bcript.hash(NewPassword, 12, (err, hash) => {
+
         querry.get()
+
             .then((document) => {
+
                 if (!document) {
+
                     res.render("Auth/ResetPass", { error: "Email dosent exist!" });
                     res.end();
                 }
                 else {
+
                     document.forEach((user) => {
+                        
                         const id = user.id;
                         dbCode = user['_fieldsProto']['key']['stringValue'];
+
                         if (dbCode !== Code) {
+
                             console.log(dbCode)
+
                             res.render("Auth/ResetPass", { error: "Wrong key!" })
                             res.end()
                         }
                         else if (NewPassword.length < 4) {
+
                             res.render("Auth/ResetPass", { error: "Password too small!" })
                             return res.end();
                         }
                         else {
+
                             let newKey = KeyGenerate(9, 0)
+
                             dbContext.doc(id).update({ password: hash });
                             dbContext.doc(id).update({ key: newKey });
+                            
                             res.render("Auth/ResetPass", { error: "Password changed!" })
                             res.end()
                         }

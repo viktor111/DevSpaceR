@@ -7,18 +7,26 @@ const ProjectService = require("../Services/Project")
 const SignUpForProject = (req, res) =>{
     let dbContext = new DbContext().Initialize("projects");
     let projectId = req.params.id
-    let project = dbContext.doc(projectId).update({usersQueue: ["addednew"]},{merge: true})
+    let promise = dbContext.doc(projectId).get().then(snapshot => {
+        let oldArray = snapshot["_fieldsProto"]["usersQueue"]["values"]
+        console.log(oldArray)
+    })
+    //let data = {usersQueue: newArray}
+    //let project = dbContext.doc(projectId).update(data,{merge: true})
     
     res.end()
 }
 
 const GetProjects = (req, res) => {
+
     const token = req.cookies.token;
     let dbContext = new DbContext().Initialize("projects")
     let projects = []
 
     let projectsQuerry = dbContext.orderBy("title").get().then((snapshot) => {
+
         snapshot.forEach((project) => {
+
             let title = project["_fieldsProto"]["title"]["stringValue"]
             let description = project["_fieldsProto"]["description"]["stringValue"]
             let date = project["_fieldsProto"]["created"]["stringValue"]
@@ -39,11 +47,14 @@ const GetProjects = (req, res) => {
 
     })
         .finally(() => {
+
             if (!token) {
+                
                 res.render("Project/Main", { projects: projects, title: "Create Project", logged: false });
                 res.end()
             }
             else {
+
                 let payload = jwt.verify(token, "auth")
 
                 res.render("Project/Main", { projects: projects, title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
@@ -53,13 +64,16 @@ const GetProjects = (req, res) => {
 }
 
 const CreateProject = (req, res) => {
+
     const token = req.cookies.token;
     if (!token) {
+        
         res.render("Auth/Register", { error: "You need to have an account!" })
         res.end()
 
     }
     else {
+
         let payload = jwt.verify(token, "auth")
         res.render("Project/Create", { title: "Create Project", logged: true, username: payload.username, admin: payload.admin });
         res.end()
@@ -67,12 +81,16 @@ const CreateProject = (req, res) => {
 }
 
 const PostProject = (req, res) => {
+
     const token = req.cookies.token
+
     if (!token) {
+
         res.render("Auth/Register", { error: "You need to have account!" })
         res.end()
     }
     else {
+        
         let payload = jwt.verify(token, "auth")
 
         const { Title, Description, Github, Selectpicker } = req.body;
@@ -82,20 +100,25 @@ const PostProject = (req, res) => {
 
         let projectService = new ProjectService();
         projectService.SaveProject(project)
+
         res.redirect("/")
         res.end()
     }
 }
 
 const ProjectDetails = (req, res) => {
+    
     let dbContext = new DbContext().Initialize("projects")
     const token = req.cookies.token
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     let projectId = req.params.id;
     let projectObj = {}
     console.log(projectId)
+
     let data = dbContext.doc(projectId).get().then((project) => {
+
         if (!project) {
+
             res.redirect('/')
         }
         else {
@@ -119,13 +142,16 @@ const ProjectDetails = (req, res) => {
         }
     })
     .finally(() => {
+
         if (!token) {
+
             res.render("Project/ProjectDetails", { projectObj: projectObj, logged: false })
             res.end()
         }
         else {
 
             let payload = jwt.verify(token, "auth")
+
             res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin })
             res.end()
         }
