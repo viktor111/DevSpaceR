@@ -128,7 +128,7 @@ const PostLogin = (req, res) => {
                     let token = authService.JWTAuthenticate({ username, admin }, expirySec, jwtKey);
 
                     res.cookie("token", token, {
-                        maxAge: expirySec * 1000000
+                       
                     })
                     res.redirect("/")
                     res.end();
@@ -239,7 +239,7 @@ const PostResetPassword = (req, res) => {
 }
 
 module.exports = {
-    
+
     GetRegister,
     GetLogin,
     GetResetPassword,

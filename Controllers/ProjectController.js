@@ -3,22 +3,49 @@ const DbContext = require("../Config/dbContext")
 const Project = require("../Models/Project")
 const Mailer = require("../Helpers/Mailer")
 const ProjectService = require("../Services/Project")
+const FirebaseParser = require("../Helpers/FirebaseObjParser")
 
-const SignUpForProject = (req, res) =>{
+const SignUpForProject = (req, res) => {
 
     let dbContext = new DbContext().Initialize("projects");
-    
+    let Parser = new FirebaseParser();
+    const token = req.cookies.token;
+    let username;
+    let newArr;
+    if (!token) {
+        return res.render("Auth/Login", { error: "You need to be logged in to sing up!" })
+    }
+    else {
+        let payload = jwt.verify(token, 'auth')
+        username = payload.username
+    }
+
     let projectId = req.params.id
 
     let promise = dbContext.doc(projectId).get().then(snapshot => {
 
-        let oldArray = snapshot["_fieldsProto"]["usersQueue"]["values"]
-        console.log(oldArray)
-    })
-    //let data = {usersQueue: newArray}
-    //let project = dbContext.doc(projectId).update(data,{merge: true})
-    
-    res.end()
+        let oldArrayFirebaseObj = snapshot["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
+
+        newArr = Parser.ToArray(oldArrayFirebaseObj)
+        let userExists = newArr.includes(username)
+        if (userExists) {
+            return res.redirect("/")
+        }
+        else {
+            newArr.push(username)
+            console.log(newArr)
+
+            dbContext.doc(projectId).update({ usersQueue: newArr })
+
+            console.log(newArr)
+            res.redirect(`/Project/${projectId}`)
+            res.end()
+        }
+
+    }).catch(
+        err => console.log(err)
+    )
+
 }
 
 const GetProjects = (req, res) => {
@@ -56,7 +83,7 @@ const GetProjects = (req, res) => {
         .finally(() => {
 
             if (!token) {
-                
+
                 res.render("Project/Main", { projects: projects, title: "Create Project", logged: false });
                 res.end()
             }
@@ -74,7 +101,7 @@ const CreateProject = (req, res) => {
 
     const token = req.cookies.token;
     if (!token) {
-        
+
         res.render("Auth/Register", { error: "You need to have an account!" })
         res.end()
 
@@ -97,11 +124,11 @@ const PostProject = (req, res) => {
         res.end()
     }
     else {
-        
+
         let payload = jwt.verify(token, "auth")
 
-        const { 
-            Title, Description, Github, Selectpicker 
+        const {
+            Title, Description, Github, Selectpicker
         } = req.body;
 
         let dbContext = new DbContext().Initialize("projects")
@@ -117,7 +144,7 @@ const PostProject = (req, res) => {
 }
 
 const ProjectDetails = (req, res) => {
-    
+
     let dbContext = new DbContext().Initialize("projects")
 
     const token = req.cookies.token
@@ -143,6 +170,7 @@ const ProjectDetails = (req, res) => {
             let owner = project["_fieldsProto"]["creator"]["stringValue"]
             let language = project["_fieldsProto"]["language"]["stringValue"]
 
+
             let projectObjtemp = {
 
                 title: title,
@@ -154,22 +182,36 @@ const ProjectDetails = (req, res) => {
             }
 
             projectObj = projectObjtemp
-        }
-    })
-    .finally(() => {
 
         if (!token) {
 
             res.render("Project/ProjectDetails", { projectObj: projectObj, logged: false })
             res.end()
+
         }
         else {
 
             let payload = jwt.verify(token, "auth")
+            let oldArrayFirebaseObj = project["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
 
-            res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin })
-            res.end()
+            const Parser = new FirebaseParser()
+            let newArr = Parser.ToArray(oldArrayFirebaseObj)
+
+            let username =  payload.username
+            let userExists = newArr.includes(username)
+
+            if (userExists) {
+                res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin, userExists: true })
+                return res.end()
+            }
+            else {
+                res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin, userExists: false })
+                return res.end()
+            }
         }
+        }
+    }).catch(err => {
+        console.log(err)
     })
 }
 

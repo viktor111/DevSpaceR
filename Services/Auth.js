@@ -10,7 +10,9 @@ class Auth {
     SaveUser(User) {
 
         let mailer = new Mailer();
+
         const thankMessge = "Thank you for registering to DevSpaceR!"
+        
         mailer.SendEmail(User.email, thankMessge, thankMessge);
 
         let randomKey = KeyGenerate(9, 0);
@@ -22,7 +24,7 @@ class Auth {
             if (err) return console.log(err);
 
             return dbContext.add({
-                
+
                 username: User.username,
                 email: User.email,
                 password: hash.toString(),

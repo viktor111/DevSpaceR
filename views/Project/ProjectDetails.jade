@@ -2,7 +2,10 @@ extends ../layout
 
 block content
     form(class="signup" ,action="Signup/" + projectObj.projectId, method="post")
-        input(type="submit", value="Signup for project")
+        if !userExists
+            input(type="submit", value="Signup for project")
+        else
+            p SignedUp
     div(class="row project-wraper")
         div(class="col-lg-12 col-md-12 col-sm-12")
             h1= projectObj.title
