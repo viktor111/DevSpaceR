@@ -188,6 +188,7 @@ const PostResetPassword = (req, res) => {
     let dbContext = new DbContext().Initialize("users");
 
     let dbCode;
+
     let querry = dbContext.where('email', '==', Email);
 
     bcript.hash(NewPassword, 12, (err, hash) => {
@@ -226,7 +227,7 @@ const PostResetPassword = (req, res) => {
 
                             dbContext.doc(id).update({ password: hash });
                             dbContext.doc(id).update({ key: newKey });
-                            
+
                             res.render("Auth/ResetPass", { error: "Password changed!" })
                             res.end()
                         }
@@ -238,6 +239,7 @@ const PostResetPassword = (req, res) => {
 }
 
 module.exports = {
+    
     GetRegister,
     GetLogin,
     GetResetPassword,

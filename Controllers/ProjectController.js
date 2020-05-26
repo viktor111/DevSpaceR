@@ -5,9 +5,13 @@ const Mailer = require("../Helpers/Mailer")
 const ProjectService = require("../Services/Project")
 
 const SignUpForProject = (req, res) =>{
+
     let dbContext = new DbContext().Initialize("projects");
+    
     let projectId = req.params.id
+
     let promise = dbContext.doc(projectId).get().then(snapshot => {
+
         let oldArray = snapshot["_fieldsProto"]["usersQueue"]["values"]
         console.log(oldArray)
     })
@@ -20,7 +24,9 @@ const SignUpForProject = (req, res) =>{
 const GetProjects = (req, res) => {
 
     const token = req.cookies.token;
+
     let dbContext = new DbContext().Initialize("projects")
+
     let projects = []
 
     let projectsQuerry = dbContext.orderBy("title").get().then((snapshot) => {
@@ -35,6 +41,7 @@ const GetProjects = (req, res) => {
             let id = project.id
 
             let tempObj = {
+
                 title: title,
                 description: description,
                 date: date,
@@ -93,7 +100,10 @@ const PostProject = (req, res) => {
         
         let payload = jwt.verify(token, "auth")
 
-        const { Title, Description, Github, Selectpicker } = req.body;
+        const { 
+            Title, Description, Github, Selectpicker 
+        } = req.body;
+
         let dbContext = new DbContext().Initialize("projects")
 
         let project = new Project(Title, Description, Selectpicker, payload.username, Github, new Date())
@@ -109,10 +119,14 @@ const PostProject = (req, res) => {
 const ProjectDetails = (req, res) => {
     
     let dbContext = new DbContext().Initialize("projects")
+
     const token = req.cookies.token
+
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
+
     let projectId = req.params.id;
     let projectObj = {}
+
     console.log(projectId)
 
     let data = dbContext.doc(projectId).get().then((project) => {
@@ -130,6 +144,7 @@ const ProjectDetails = (req, res) => {
             let language = project["_fieldsProto"]["language"]["stringValue"]
 
             let projectObjtemp = {
+
                 title: title,
                 description: description,
                 date: date,
@@ -159,6 +174,7 @@ const ProjectDetails = (req, res) => {
 }
 
 module.exports = {
+
     GetProjects,
     CreateProject,
     PostProject,
