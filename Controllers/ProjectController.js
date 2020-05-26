@@ -8,15 +8,22 @@ const FirebaseParser = require("../Helpers/FirebaseObjParser")
 const SignUpForProject = (req, res) => {
 
     let dbContext = new DbContext().Initialize("projects");
+
     let Parser = new FirebaseParser();
+
     const token = req.cookies.token;
+
     let username;
     let newArr;
+
     if (!token) {
+
         return res.render("Auth/Login", { error: "You need to be logged in to sing up!" })
     }
     else {
+
         let payload = jwt.verify(token, 'auth')
+
         username = payload.username
     }
 
@@ -27,17 +34,23 @@ const SignUpForProject = (req, res) => {
         let oldArrayFirebaseObj = snapshot["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
 
         newArr = Parser.ToArray(oldArrayFirebaseObj)
+
         let userExists = newArr.includes(username)
+
         if (userExists) {
+
             return res.redirect("/")
         }
         else {
+
             newArr.push(username)
+            
             console.log(newArr)
 
             dbContext.doc(projectId).update({ usersQueue: newArr })
 
             console.log(newArr)
+
             res.redirect(`/Project/${projectId}`)
             res.end()
         }
@@ -192,25 +205,32 @@ const ProjectDetails = (req, res) => {
         else {
 
             let payload = jwt.verify(token, "auth")
+
             let oldArrayFirebaseObj = project["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
 
             const Parser = new FirebaseParser()
+
             let newArr = Parser.ToArray(oldArrayFirebaseObj)
 
             let username =  payload.username
+
             let userExists = newArr.includes(username)
 
             if (userExists) {
+
                 res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin, userExists: true })
                 return res.end()
             }
             else {
+
                 res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin, userExists: false })
                 return res.end()
             }
         }
         }
-    }).catch(err => {
+    })
+    .catch(err => {
+
         console.log(err)
     })
 }

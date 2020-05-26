@@ -1,4 +1,5 @@
 class FirebaseObjParser{
+    
     ToArray(firebaseObj){
 
         let newArr = []
