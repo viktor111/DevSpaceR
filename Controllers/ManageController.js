@@ -1,0 +1,4 @@
+const GetMain = (req, res) => {
+
+    
+}

@@ -42,6 +42,7 @@ const PostRegister = async (req, res) => {
 
                 counter++;
             })
+            
         })
         .catch(() => {
 
