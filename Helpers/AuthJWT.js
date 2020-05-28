@@ -26,8 +26,6 @@ class Auth {
             logged: true
         }
 
-        console.log(data)
-
         return data
     }
 }

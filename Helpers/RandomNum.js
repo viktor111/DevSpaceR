@@ -1,4 +1,5 @@
 const Random = (min, max) => {
+    
     let randomNums = [];
 
     let newString;

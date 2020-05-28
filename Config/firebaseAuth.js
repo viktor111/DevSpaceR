@@ -1,26 +1,26 @@
-class Firebase{
+class Firebase {
 
-    constructor(serviceAccount){
+    constructor(serviceAccount) {
 
         this.serviceAccount = serviceAccount;
     }
 
-    connect(){
+    connect() {
 
         const firebaseAdmin = require('firebase-admin');
-    
+
         try {
 
             firebaseAdmin.initializeApp({
 
                 credential: firebaseAdmin.credential.cert(this.serviceAccount),
-                databaseURL: "https://devspacer-85c37.firebaseio.com"  
+                databaseURL: "https://devspacer-85c37.firebaseio.com"
 
-        });
+            });
 
-        console.log("Succsessfully authenticated to firebase.")
+            console.log("Succsessfully authenticated to firebase.")
 
-        } 
+        }
 
         catch (err) {
 
