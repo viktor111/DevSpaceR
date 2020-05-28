@@ -15,8 +15,9 @@ class Auth {
         }
     }
 
-    GetUserData(){
+    GetUserData(req){
 
+        const token = req.cookies.token;
         let payload = jwt.verify(token, 'auth')
 
         let data = {
@@ -24,6 +25,8 @@ class Auth {
             admin: payload.admin, 
             logged: true
         }
+
+        console.log(data)
 
         return data
     }

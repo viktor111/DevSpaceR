@@ -9,6 +9,7 @@ const ProjectController = require("./Controllers/ProjectController")
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth')
 const projectRouter = require('./routes/project')
+const managerRouter = require('./routes/manager')
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/Manager' , managerRouter)
 app.use('/Project', projectRouter)
 app.use('/Auth', authRouter)
 app.use(indexRouter);
