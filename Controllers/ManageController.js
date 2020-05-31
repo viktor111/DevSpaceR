@@ -7,6 +7,7 @@ const GetMain = (req, res) => {
     const dbContext = new DbContext().Initialize('projects');
 
     let logged = Auth.IsLoggedIn(req)
+    
     let data = Auth.GetUserData(req)
 
     if (logged) {
