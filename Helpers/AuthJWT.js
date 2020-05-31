@@ -26,8 +26,11 @@ class Auth {
             logged: true
         }
 
+        console.log(data)
+
         return data
     }
+
 }
 
 module.exports = Auth

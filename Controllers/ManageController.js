@@ -7,9 +7,10 @@ const GetMain = (req, res) => {
     const dbContext = new DbContext().Initialize('projects');
 
     let logged = Auth.IsLoggedIn(req)
+    let data = Auth.GetUserData(req)
 
     if (logged) {
-        let data = Auth.GetUserData(req)
+        
         let projects = []
 
         let querryProjectsByUser = dbContext.where("creator", "==", data.username);
@@ -35,19 +36,19 @@ const GetMain = (req, res) => {
                         language: language,
                         id: id
                     }
-                    projects.push(tempObj)
-                    
+                    projects.push(tempObj)  
 
                 })
             })
             .catch(e => console.log(e))
             .finally(() => {
                 data.projects = projects
-                console.log(data)
+                console.log(data.projects)
+                res.render("Manager/Main", data)
+                res.end()
             })
 
-        res.render("Manager/Main", data)
-        res.end()
+        
     }
     else {
         res.render("/Auth/Login", { error: "You need an account to access manager!" })

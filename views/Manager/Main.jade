@@ -3,3 +3,12 @@ extends ../layout
 block content
 
     h1 Manager
+
+    if data.projects.length == 0
+        h1 You have no projects
+    else
+        each project in data.projects
+            h1=project.title
+            p=project.description
+            p=project.creator
+            
