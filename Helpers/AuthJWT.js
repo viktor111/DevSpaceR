@@ -11,6 +11,7 @@ class Auth {
             return false
         }
         else{
+            
             return true
         }
     }
@@ -18,7 +19,7 @@ class Auth {
     GetUserData(req){
 
         const token = req.cookies.token;
-        
+
         let payload = jwt.verify(token, 'auth')
 
         let data = {
