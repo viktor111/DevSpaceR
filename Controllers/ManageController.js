@@ -43,10 +43,9 @@ const GetMain = (req, res) => {
             })
             .catch(e => console.log(e))
             .finally(() => {
-                data.projects = projects
-                console.log(data.projects)
+                data["projects"] = projects
+                console.log(data)
                 res.render("Manager/Main", data)
-                res.end()
             })
 
         
