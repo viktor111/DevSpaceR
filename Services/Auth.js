@@ -30,7 +30,10 @@ class Auth {
                 password: hash.toString(),
                 created: User.created,
                 isAdmin: true,
-                key: randomKey
+                key: randomKey,
+                projectsSigned: [],
+                projectsCreated: [],
+                projectsDeclined: 0
             })
         })
       

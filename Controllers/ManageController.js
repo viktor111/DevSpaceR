@@ -1,5 +1,7 @@
 const AuthJWT = require("../Helpers/AuthJWT")
 const DbContext = require("../Config/dbContext")
+const FirebaseParser = require("../Helpers/FirebaseObjParser")
+
 
 const GetMain = (req, res) => {
 
@@ -66,23 +68,58 @@ const GetMain = (req, res) => {
 }
 
 const GetQueue = (req, res) => {
+
     const Auth = new AuthJWT()
 
+    const Parser = new FirebaseParser()
+
+    const projectId = req.params.id
+
     const dbContext = new DbContext().Initialize('projects');
+
+    let toDisplay = []
 
     let logged = Auth.IsLoggedIn(req)
     
     let data = Auth.GetUserData(req)
 
     if(logged){
-        res.render("Manager/Queue", data)
+
+        let querryQueue = dbContext.doc(projectId).get()
+
+        .then((data) => {
+
+           let oldArrayFirebaseObj = data["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]      
+            
+           toDisplay = Parser.ToArray(oldArrayFirebaseObj)
+
+           console.log(toDisplay)
+           
+        })
+        .catch(err => {
+
+            console.log(err)
+        })
+        .finally(() =>{
+
+            data["users"] = toDisplay
+
+            res.render("Manager/Queue", data)
+        })
+        
     }
     else{
+        
         res.render("Auth/Login", {error: "You need an account to access queue!"})
     }
 }
 
+const ConfirmUser = (req, res) => {
+    
+}
+
 module.exports = {
     GetMain,
-    GetQueue
+    GetQueue,
+    ConfirmUser
 }

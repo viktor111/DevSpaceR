@@ -5,7 +5,7 @@ const Mailer = require("../Helpers/Mailer")
 const ProjectService = require("../Services/Project")
 const FirebaseParser = require("../Helpers/FirebaseObjParser")
 
-const SignUpForProject = (req, res) => {
+const  SignUpForProject = (req, res) => {
 
     let dbContext = new DbContext().Initialize("projects");
 
@@ -15,6 +15,9 @@ const SignUpForProject = (req, res) => {
 
     let username;
     let newArr;
+    let userId;
+    let newUserProjectsSigned;
+    let oldUserProjectsSigned;
 
     if (!token) {
 
@@ -26,6 +29,26 @@ const SignUpForProject = (req, res) => {
 
         username = payload.username
     }
+
+    let userContext = new DbContext().Initialize("users");
+
+    userContext.where("username", "==", username).limit(1).get()
+   .then((snapshot) => {
+
+       snapshot.forEach((user) => {
+           oldUserProjectsSigned = user["_fieldsProto"]["projectsSigned"]["arrayValue"]["values"]
+           userId = user.id;
+           
+       })
+       newUserProjectsSigned = Parser.ToArray(oldUserProjectsSigned)
+
+       newUserProjectsSigned.push(projectId)
+
+       console.log(oldUserProjectsSigned)
+
+       userContext.doc(userId).update({projectsSigned: newUserProjectsSigned})
+
+   })
 
     let projectId = req.params.id
 
@@ -45,11 +68,7 @@ const SignUpForProject = (req, res) => {
 
             newArr.push(username)
             
-            console.log(newArr)
-
             dbContext.doc(projectId).update({ usersQueue: newArr })
-
-            console.log(newArr)
 
             res.redirect(`/Project/${projectId}`)
             res.end()
@@ -59,6 +78,7 @@ const SignUpForProject = (req, res) => {
         err => console.log(err)
     )
 
+   
 }
 
 const GetProjects = (req, res) => {
@@ -166,8 +186,6 @@ const ProjectDetails = (req, res) => {
 
     let projectId = req.params.id;
     let projectObj = {}
-
-    console.log(projectId)
 
     let data = dbContext.doc(projectId).get().then((project) => {
 
