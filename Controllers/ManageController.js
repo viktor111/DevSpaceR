@@ -4,6 +4,7 @@ const DbContext = require("../Config/dbContext")
 const GetMain = (req, res) => {
 
     const Auth = new AuthJWT()
+
     const dbContext = new DbContext().Initialize('projects');
 
     let logged = Auth.IsLoggedIn(req)
@@ -17,8 +18,11 @@ const GetMain = (req, res) => {
         let querryProjectsByUser = dbContext.where("creator", "==", data.username);
 
         querryProjectsByUser
+
             .get()
+
             .then((snapshot) => {
+
                 snapshot.forEach((project) => {
 
                     let title = project["_fieldsProto"]["title"]["stringValue"]
@@ -37,26 +41,48 @@ const GetMain = (req, res) => {
                         language: language,
                         id: id
                     }
+
                     projects.push(tempObj)  
 
                 })
             })
             .catch(e => console.log(e))
+
             .finally(() => {
+
                 data["projects"] = projects
                 console.log(data)
+
                 res.render("Manager/Main", data)
             })
 
         
     }
     else {
-        res.render("/Auth/Login", { error: "You need an account to access manager!" })
+
+        res.render("Auth/Login", { error: "You need an account to access manager!" })
     }
 
 }
 
+const GetQueue = (req, res) => {
+    const Auth = new AuthJWT()
+
+    const dbContext = new DbContext().Initialize('projects');
+
+    let logged = Auth.IsLoggedIn(req)
+    
+    let data = Auth.GetUserData(req)
+
+    if(logged){
+        res.render("Manager/Queue", data)
+    }
+    else{
+        res.render("Auth/Login", {error: "You need an account to access queue!"})
+    }
+}
 
 module.exports = {
-    GetMain
+    GetMain,
+    GetQueue
 }
