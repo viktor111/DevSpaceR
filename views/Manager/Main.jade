@@ -2,13 +2,20 @@ extends ../layout
 
 block content
 
-    h1 Manager
-
     if projects.length == 0
         h1 You have no projects
+        a(href="/Project/Create") Create your first
     else
-        each project in projects
-            h1=project.title
-            p=project.description
-            p=project.creator
-            
+        div(class="row")
+             each project in projects
+                div(class="col-lg-6 col-md-6 col-sm-12 manager-project")
+                    div(class="col-lg-4 col-md-4 col-sm-12 manager-title")
+                        h1=project.title
+                    div(class="col-lg-4 col-md-4 col-sm-12 manager-desc")
+                        p=project.description
+                    div(class="col-lg-4 col-md-4 col-sm-12 manager-creator")
+                        p=project.owner
+                    div(class="col-lg-4 col-md-4 col-sm-12 manager-creator")
+                        -let projectId = project.id
+                        a(class="btn btn-primary" ,href="/Manager/Queue/#{projectId}") Queue
+            hr
