@@ -17,7 +17,8 @@ const GetMain = (req, res) => {
         
         let projects = []
 
-        let querryProjectsByUser = dbContext.where("creator", "==", data.username);
+        let querryProjectsByUser = dbContext
+        .where("creator", "==", data.username);
 
         querryProjectsByUser
 
@@ -79,14 +80,25 @@ const GetQueue = (req, res) => {
 
     let toDisplay = []
 
+    let dataDisplay = []
+
+    let userId;
+
+    let projectsDeclined;
+
+    let users = []
+
+    let projectsSignedUp;
+
     let logged = Auth.IsLoggedIn(req)
     
     let data = Auth.GetUserData(req)
 
     if(logged){
 
-        let querryQueue = dbContext.doc(projectId).get()
-
+        let querryQueue = dbContext
+        .doc(projectId)
+        .get()
         .then((data) => {
 
            let oldArrayFirebaseObj = data["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]      
@@ -101,25 +113,57 @@ const GetQueue = (req, res) => {
             console.log(err)
         })
         .finally(() =>{
-
+      
             data["users"] = toDisplay
+            data["id"] = projectId
 
             res.render("Manager/Queue", data)
         })
         
     }
     else{
-        
+
         res.render("Auth/Login", {error: "You need an account to access queue!"})
     }
 }
 
-const ConfirmUser = (req, res) => {
+const AcceptUser = (req, res) => {
+    const projectId = req.params.id
+    const username = req.params.user
+
+    const Auth = new AuthJWT()
+    const Parser = new FirebaseParser()
+    const dbContext = new DbContext().Initialize('projects');
+
+    let logged = Auth.IsLoggedIn(req)
     
+    let data = Auth.GetUserData(req)
+
+    let newArrQueue = []
+    let newAcceptUsers = []
+
+    if(logged){
+        dbContext.doc(projectId)
+        .get()
+        .then((data) => {
+            let oldArrayFirebaseObj = data["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
+            let oldArrayAccepted = data["_fieldsProto"]["usersSigned"]["arrayValue"]["values"]
+            newArrQueue = Parser.ToArray(oldArrayFirebaseObj)
+            newAcceptUsers = Parser.ToArray(oldArrayAccepted)
+            
+            // ToDo add user to accepted and remove from queue (pop, push)
+        })       
+    }
+
+}
+
+const DeclineUser = (req, res) => {
+
 }
 
 module.exports = {
     GetMain,
     GetQueue,
-    ConfirmUser
+    AcceptUser,
+    DeclineUser
 }

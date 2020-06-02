@@ -4,5 +4,12 @@ block content
     if users.length == 0
         h1 No on in queue yet
    
-    each user in users
-        p=user
+    div(class="row users-main")
+        each user in users
+            div(class="col-lg-6 col-md-6 col-sm-12 users-single")
+                h3=user
+            div(class="col-lg-6 col-md-6 col-sm-12 users-data")
+                form(action="/Manager/Accept/#{user}/#{id}", method="post")
+                    input(type="submit", value="Accept User")
+                form(action="/Manager/Decline/#{user}/#{id}", method="post")
+                    input(type="submit", value="Decline User")
