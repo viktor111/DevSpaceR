@@ -11,5 +11,8 @@ block content
             div(class="col-lg-6 col-md-6 col-sm-12 users-data")
                 form(action="/Manager/Accept/#{user}/#{id}", method="post")
                     input(type="submit", value="Accept User")
+                    hr
                 form(action="/Manager/Decline/#{user}/#{id}", method="post")
                     input(type="submit", value="Decline User")
+            
+            

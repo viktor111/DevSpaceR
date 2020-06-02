@@ -225,16 +225,20 @@ const ProjectDetails = (req, res) => {
             let payload = jwt.verify(token, "auth")
 
             let oldArrayFirebaseObj = project["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
+            let oldArrayFirebaseObj2 = project["_fieldsProto"]["usersSigned"]["arrayValue"]["values"]
+
 
             const Parser = new FirebaseParser()
 
             let newArr = Parser.ToArray(oldArrayFirebaseObj)
+            let newArr2 = Parser.ToArray(oldArrayFirebaseObj2)
 
             let username =  payload.username
 
-            let userExists = newArr.includes(username)
+            let userExistsQueue = newArr.includes(username)
+            let userExistsSigned = newArr2.includes(username)
 
-            if (userExists) {
+            if (userExistsQueue || userExistsSigned) {
 
                 res.render("Project/ProjectDetails", { projectObj: projectObj, logged: true, username: payload.username, admin: payload.admin, userExists: true })
                 return res.end()

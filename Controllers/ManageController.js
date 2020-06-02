@@ -128,6 +128,7 @@ const GetQueue = (req, res) => {
 }
 
 const AcceptUser = (req, res) => {
+
     const projectId = req.params.id
     const username = req.params.user
 
@@ -143,22 +144,90 @@ const AcceptUser = (req, res) => {
     let newAcceptUsers = []
 
     if(logged){
-        dbContext.doc(projectId)
+
+        dbContext
+        .doc(projectId)
         .get()
         .then((data) => {
             let oldArrayFirebaseObj = data["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
             let oldArrayAccepted = data["_fieldsProto"]["usersSigned"]["arrayValue"]["values"]
+
             newArrQueue = Parser.ToArray(oldArrayFirebaseObj)
             newAcceptUsers = Parser.ToArray(oldArrayAccepted)
             
-            // ToDo add user to accepted and remove from queue (pop, push)
+            newArrQueue.splice(newArrQueue.indexOf(username), 1)
+            newAcceptUsers.push(username)
+
+            dbContext.doc(projectId).update({
+
+                usersQueue: newArrQueue,
+                usersSigned: newAcceptUsers
+            })
+
+            res.redirect("/Manager/Main")
+            res.end()
         })       
     }
 
 }
 
-const DeclineUser = (req, res) => {
+const DeclineUser = (req, res) => { 
 
+    const projectId = req.params.id
+    const username = req.params.user
+
+    const Auth = new AuthJWT()
+    const Parser = new FirebaseParser()
+
+    const dbContext = new DbContext().Initialize('projects');
+    const userContext = new DbContext().Initialize('users')
+
+    let logged = Auth.IsLoggedIn(req)
+
+    let newArrQueue = []
+    
+    if (logged) {
+
+        dbContext
+        .doc(projectId)
+        .get()
+        .then((data) => {
+
+            let oldArrayFirebaseObj = data["_fieldsProto"]["usersQueue"]["arrayValue"]["values"]
+
+            newArrQueue = Parser.ToArray(oldArrayFirebaseObj)
+            newArrQueue.splice(newArrQueue.indexOf(username), 1)
+
+            dbContext.doc(projectId).update({
+                usersQueue: newArrQueue
+            })
+
+        })
+
+        let newDeclinedValue;
+
+        userContext.where("username", "==", username)
+        .get()
+        .then((snapshot) => {
+            snapshot
+            .forEach((user) => {
+
+                let id = user.id
+
+                let oldDeclinedValue = user["_fieldsProto"]["projectsDeclined"]["integerValue"]
+
+                newDeclinedValue = parseInt(oldDeclinedValue) + 1
+
+                userContext.doc(id).update({
+                    
+                    projectsDeclined: newDeclinedValue
+                })
+            })
+                        
+            res.redirect("/Manager/Main")
+            res.end()
+        })
+    }
 }
 
 module.exports = {
