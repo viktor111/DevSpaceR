@@ -10,6 +10,7 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth')
 const projectRouter = require('./routes/project')
 const managerRouter = require('./routes/manager')
+const userRouter = require('./routes/user')
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/User', userRouter)
 app.use('/Manager' , managerRouter)
 app.use('/Project', projectRouter)
 app.use('/Auth', authRouter)

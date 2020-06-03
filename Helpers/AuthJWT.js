@@ -25,6 +25,7 @@ class Auth {
         let data = {
             username: payload.username, 
             admin: payload.admin, 
+            profileCreated: payload.profileCreated,
             logged: true
         }
 

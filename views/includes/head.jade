@@ -8,7 +8,7 @@ div(class="header")
                 a(href= "/Auth/Login") Login
           if logged                               
             div(class="username col-lg-4 col-md-4 col-sm-12")
-              a(href="/User/")=username                
+              a(href="/User/Main/#{username}")=username                
             if admin
               div(class="admin col-lg-4 col-md-4 col-sm-12")
                 a(href="/Admin/Index") Admin Menu

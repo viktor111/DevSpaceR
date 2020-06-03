@@ -87,6 +87,7 @@ const PostLogin = (req, res) => {
     let username;
     let admin;
     let password;
+    let profileCreated;
 
     querry.get()
         .then((document) => {
@@ -96,6 +97,7 @@ const PostLogin = (req, res) => {
                 username = user['_fieldsProto']['username']['stringValue'];
                 admin = user['_fieldsProto']['isAdmin']['booleanValue'];
                 password = user['_fieldsProto']['password']['stringValue'];
+                profileCreated = user['_fieldsProto']['profileCreated']['booleanValue'];
 
                 counter++;
             })
@@ -126,7 +128,7 @@ const PostLogin = (req, res) => {
                     console.log(response)
                     console.log(Password)
 
-                    let token = authService.JWTAuthenticate({ username, admin }, expirySec, jwtKey);
+                    let token = authService.JWTAuthenticate({ username, admin, profileCreated }, expirySec, jwtKey);
 
                     res.cookie("token", token, {
                        

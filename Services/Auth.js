@@ -31,6 +31,7 @@ class Auth {
                 created: User.created,
                 isAdmin: true,
                 key: randomKey,
+                profileCreated: false,
                 projectsSigned: [],
                 projectsCreated: [],
                 projectsDeclined: 0
