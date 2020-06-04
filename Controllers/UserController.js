@@ -78,8 +78,8 @@ PostCreateUserProfile = (req, res) => {
         .then((snapshopt) => {
             snapshopt.forEach((user) => {
                 userId = user.id
-                console.log(userId)
             })
+            
             
         })
         .catch(err => {

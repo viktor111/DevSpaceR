@@ -161,7 +161,10 @@ const PostProject = (req, res) => {
         let payload = jwt.verify(token, "auth")
 
         const {
-            Title, Description, Github, Selectpicker
+            Title,
+            Description,
+            Github,
+            Selectpicker
         } = req.body;
 
         let dbContext = new DbContext().Initialize("projects")
