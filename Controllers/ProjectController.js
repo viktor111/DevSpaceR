@@ -32,8 +32,11 @@ const  SignUpForProject = (req, res) => {
 
     let userContext = new DbContext().Initialize("users");
 
-    userContext.where("username", "==", username).limit(1).get()
-   .then((snapshot) => {
+    userContext
+    .where("username", "==", username)
+    .limit(1)
+    .get()
+    .then((snapshot) => {
 
        snapshot.forEach((user) => {
            oldUserProjectsSigned = user["_fieldsProto"]["projectsSigned"]["arrayValue"]["values"]
@@ -168,12 +171,32 @@ const PostProject = (req, res) => {
         } = req.body;
 
         let dbContext = new DbContext().Initialize("projects")
+        let userContext = new DbContext().Initialize("users")
+        const Parser = new FirebaseParser()
 
         let project = new Project(Title, Description, Selectpicker, payload.username, Github, new Date())
 
         let projectService = new ProjectService();
         projectService.SaveProject(project)
 
+        userContext
+        .where("username", "==", payload.username)
+        .get()
+        .then((snapshot) => {
+            snapshot.forEach((user) => {
+                let oldArrayFirebaseObj = user["_fieldsProto"]["projectsCreated"]["arrayValue"]["values"]
+                let newFirebaseObj = Parser.ToArray(oldArrayFirebaseObj)
+                let id = user.id
+
+                newFirebaseObj.push(Title)
+
+                userContext.doc(id).update({
+                    projectsCreated: newFirebaseObj
+                })
+
+            })
+        })
+        
         res.redirect("/")
         res.end()
     }

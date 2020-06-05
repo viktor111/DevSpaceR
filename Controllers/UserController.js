@@ -37,10 +37,34 @@ const GetMain = (req, res) => {
                 .then((snapshopt) => {
                     snapshopt.forEach((user) => {
                         let profileUpdatedFirebase = user["_fieldsProto"]["profileCreated"]["booleanValue"]
+                        let name = user["_fieldsProto"]["name"]["stringValue"]
+                        let description = user["_fieldsProto"]["description"]["stringValue"]
+                        let specialty = user["_fieldsProto"]["specialty"]["stringValue"]
+                        let website = user["_fieldsProto"]["sebsite"]["stringValue"]
+                        let projectsCreated = user["_fieldsProto"]["projectsCreated"]["arrayValue"]["values"]
+                        let projectsSignedup = user["_fieldsProto"]["projectsSigned"]["arrayValue"]["values"]
+
+                        let arraySigned = Parser.ToArray(projectsSignedup)
+                        let arrayCreated = Parser.ToArray(projectsCreated)
+
+                        let lenCreated = arrayCreated.length;
+                        let lenSigned = arraySigned.length;
+
+
+                       
+                        data["lenCreated"] = lenCreated;
+                        data["lenSigned"] = lenSigned;
+                        data["name"] = name;
+                        data["description"] = description;
+                        data["specialty"] = specialty;
+                        data["website"] = website;
+
+
+                        res.render('User/Main', data)
+                        res.end()
                     })
                 })
-                res.render('User/Main', data)
-                res.end()
+               
             }
            
         }
