@@ -3,8 +3,24 @@ extends ../layout
 block content
 
     form(action="/User/Profile/Create/#{username}", method="post")
-        input(type="text" name="Name")
 
-        input(type="text", name="")
+        span *Name:
+            input(type="text" name="Name")
+
+        span Description:
+            input(required type="text", name="Description")
+
+        span *Website:
+            input(type="text", name="Website")
+
+        span Github
+            input(required type="text", name="Github")
         
+        span Specialty
+            select(name="Selectpicker") 
+                option(value="Frontend") Frontend
+                option(value="Backend") Backend
+                option(value="Fullstack") Fullstack
+                option(value="Devops") Devops
+
         input(type="submit", value="Create Profile")
