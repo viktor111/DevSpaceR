@@ -2,15 +2,22 @@ extends ../layout
 
 block content
 
-    span Projects Created:
+    div(class="row")
+
+     div(class="user-item col-lg-12 col-md-12 col-sm-12")
+        span Projects Created:
         p=lenCreated
-
-    span Projects Signed Up:
+     div(class="user-item col-lg-12 col-md-12 col-sm-12")
+        span Projects Signed Up:
         p=lenSigned
-
-    p=name
-    p=description
-    p=specialty
-    p=website
+        
+        div(class="user-item col-lg-12 col-md-12 col-sm-12")
+            p=name
+        div(class="uer-item col-lg-12 col-md-12 col-sm-12")
+            p=description
+        div(class="user-item col-lg-12 col-md-12 col-sm-12")
+            p=specialty
+        div(class="user-item col-lg-12 col-md-12 col-sm-12")
+            p=website
 
     
