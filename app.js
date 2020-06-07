@@ -12,6 +12,8 @@ const projectRouter = require('./routes/project')
 const managerRouter = require('./routes/manager')
 const userRouter = require('./routes/user')
 
+const projectSocket = require("./Chat/projectSocket")
+
 const app = express();
 
 const Firebase = require("./Config/firebaseAuth");
