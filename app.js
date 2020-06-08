@@ -11,10 +11,10 @@ const authRouter = require('./routes/auth')
 const projectRouter = require('./routes/project')
 const managerRouter = require('./routes/manager')
 const userRouter = require('./routes/user')
-
-const projectSocket = require("./Chat/projectSocket")
+const chatRouter = require('./routes/chat')
 
 const app = express();
+
 
 const Firebase = require("./Config/firebaseAuth");
 let serviceAccount = require("./Config/devspacer-85c37-firebase-adminsdk-v8iq9-579733c529.json")
@@ -37,6 +37,7 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/Chat', chatRouter)
 app.use('/User', userRouter)
 app.use('/Manager' , managerRouter)
 app.use('/Project', projectRouter)

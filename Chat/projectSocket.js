@@ -1,9 +1,6 @@
-const mainSocket = (app) => {
-    const io = require("socket.io")(app)
+const io = require("socket.io")
 
-    io.on("connection", (socket) => {
-        console.log("New connection!")
-    })
+
+const SocketServer = () => {
+    
 }
-
-module.exports = mainSocket
