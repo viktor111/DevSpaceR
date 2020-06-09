@@ -4,6 +4,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
+const http = require('http');
+
+const serverConfig = require("./bin/servercfg")
+
 const ProjectController = require("./Controllers/ProjectController")
 
 const indexRouter = require('./routes/index');
@@ -14,7 +18,6 @@ const userRouter = require('./routes/user')
 const chatRouter = require('./routes/chat')
 
 const app = express();
-
 
 const Firebase = require("./Config/firebaseAuth");
 let serviceAccount = require("./Config/devspacer-85c37-firebase-adminsdk-v8iq9-579733c529.json")
@@ -59,4 +62,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+const port = serverConfig.normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+const server = http.createServer(app);
+
+server.listen(port);
+//server.on('error', serverConfig.onError);
+//server.on('listening', serverConfig.onListening(server));
