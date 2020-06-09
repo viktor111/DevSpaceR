@@ -7,9 +7,6 @@ const logger = require('morgan');
 const http = require('http');
 const debug = require('debug')('devspacer:server');
 
-
-const serverConfig = require("./bin/servercfg")
-
 const ProjectController = require("./Controllers/ProjectController")
 
 const indexRouter = require('./routes/index');
