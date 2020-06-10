@@ -84,14 +84,22 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
+const io = require("socket.io")(server)
+
+io.on("connection", (socket) => {
+  console.log("New connection established...")
+  console.log(socket)
+})
+
 server.listen(port);
+
 
 server.on('error', () => {
   if (error.syscall !== 'listen') {
     throw error;
   }
 
-  var bind = typeof port === 'string'
+  const bind = typeof port === 'string'
     ? 'Pipe ' + port
     : 'Port ' + port;
 
