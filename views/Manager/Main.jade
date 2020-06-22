@@ -6,6 +6,8 @@ block content
         h1 You have no projects
         a(href="/Project/Create") Create your first
     else
+        div(class="message")
+            p=message
         div(class="row")
              each project in projects
                 div(class="col-lg-6 col-md-6 col-sm-12 manager-project")
@@ -18,4 +20,5 @@ block content
                     div(class="col-lg-4 col-md-4 col-sm-12 manager-creator")
                         -let projectId = project.id
                         a(class="btn btn-primary" ,href="/Manager/Queue/#{projectId}") Queue
+                        a(class="btn btn-warning" ,href="/Manager/Eddit/#{projectId}") Eddit
             hr

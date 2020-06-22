@@ -1,6 +1,7 @@
 const AuthJWT = require("../Helpers/AuthJWT")
 const DbContext = require("../Config/dbContext")
 const FirebaseParser = require("../Helpers/FirebaseObjParser")
+const { auth } = require("firebase-admin")
 
 
 const GetMain = (req, res) => {
@@ -230,9 +231,78 @@ const DeclineUser = (req, res) => {
     }
 }
 
+const GetEdditProject = (req, res) => {
+    const id = req.params.id;
+    const dbContext = new DbContext().Initialize("projects")
+    const Auth =  new AuthJWT()
+    let logged = Auth.IsLoggedIn(req)
+    if(logged){
+        let data = Auth.GetUserData(req);
+
+        dbContext
+        .doc(id)
+        .get()
+        .then(project => {
+            let title = project["_fieldsProto"]["title"]["stringValue"]
+            let description = project["_fieldsProto"]["description"]["stringValue"]
+            let github = project["_fieldsProto"]["github"]["stringValue"]
+
+            data["title"] = title
+            data["description"] = description
+            data["github"] = github
+            data["id"] = id
+            res.render("Manager/Eddit", data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    else{
+        res.redirect("/")
+    }
+
+}
+
+
+const PostEdditProject = (req, res) => {
+    const {
+        Title,
+        Description,
+        Github,
+        Selectpicker
+    } = req.body;
+
+    const id = req.params.id;
+
+    const dbContext = new DbContext().Initialize("projects")
+    const Auth =  new AuthJWT()
+    let logged = Auth.IsLoggedIn(req)
+    if(logged){
+
+        let data = Auth.GetUserData(req)
+        dbContext.doc(id).update({
+            title: Title,
+            description: Description,
+            github: Github,
+            language: Selectpicker
+        }).catch(err => {
+            console.log(err)
+        })
+        data["message"] = "Project updated!"
+
+        res.redirect("/")
+
+    }
+    else{
+        res.redirect("/")
+    }
+}
+
 module.exports = {
     GetMain,
     GetQueue,
     AcceptUser,
-    DeclineUser
+    DeclineUser,
+    GetEdditProject,
+    PostEdditProject
 }

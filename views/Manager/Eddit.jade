@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+
+    form(class="project-form" ,action="/Manager/Eddit/#{id}", method="post")
+        div(class="error-box")
+            p= error
+        label(for="Title") Title
+
+        input(required ,class="project-form-item" ,type="text", name="Title" value=title)
+        input(required ,class="project-form-item" ,type="text", name="Description" value=description)
+        input(required ,class="project-form-item" ,type="text", name="Github" value=github)
+        select(name="Selectpicker") 
+            option(value="Javascript") Javascript
+            option(value="C#") C#
+        input(type="submit", value="Confirm Edit")

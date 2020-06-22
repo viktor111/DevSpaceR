@@ -1,6 +1,4 @@
-let btn = document.getElementById("connect-btn")
-console.log(btn)
+tinymce.init({
+    selector: '#mytextarea'
+  });
 
-btn.addEventListener("click", () => {
-    var socket = io();
-})

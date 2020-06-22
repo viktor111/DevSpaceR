@@ -14,7 +14,6 @@ const authRouter = require('./routes/auth')
 const projectRouter = require('./routes/project')
 const managerRouter = require('./routes/manager')
 const userRouter = require('./routes/user')
-const chatRouter = require('./routes/chat')
 
 const app = express();
 
@@ -39,7 +38,6 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/Chat', chatRouter)
 app.use('/User', userRouter)
 app.use('/Manager' , managerRouter)
 app.use('/Project', projectRouter)
@@ -83,13 +81,6 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 const server = http.createServer(app);
-
-const io = require("socket.io")(server)
-
-io.on("connection", (socket) => {
-  console.log("New connection established...")
-  console.log(socket)
-})
 
 server.listen(port);
 

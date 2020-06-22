@@ -1,6 +1,13 @@
 extends ../layout
 
 block content
+
+  
+    if !userExists
+        p Sign up to chat
+    else
+        a(href="http://localhost:4040/Chat/" + projectObj.projectId) Chat
+
     form(class="signup" ,action="Signup/" + projectObj.projectId, method="post")
         if !userExists
             input(type="submit", value="Signup for project")
@@ -11,5 +18,7 @@ block content
             h1= projectObj.title
         div(class="col-lg-12 col-md-12 col-sm-12")
             p= projectObj.description 
+        div(class="col-lg-12 col-md-12 col-sm-12") 
+            p= projectObj.github
         div(class="col-lg-12 col-md-12 col-sm-12") 
             p= projectObj.owner

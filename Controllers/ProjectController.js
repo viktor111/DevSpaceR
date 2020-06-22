@@ -5,7 +5,7 @@ const Mailer = require("../Helpers/Mailer")
 const ProjectService = require("../Services/Project")
 const FirebaseParser = require("../Helpers/FirebaseObjParser")
 
-const  SignUpForProject = (req, res) => {
+const SignUpForProject = (req, res) => {
 
     let dbContext = new DbContext().Initialize("projects");
 
@@ -170,6 +170,8 @@ const PostProject = (req, res) => {
             Selectpicker
         } = req.body;
 
+        console.log(Description)
+
         let dbContext = new DbContext().Initialize("projects")
         let userContext = new DbContext().Initialize("users")
         const Parser = new FirebaseParser()
@@ -224,6 +226,7 @@ const ProjectDetails = (req, res) => {
             let title = project["_fieldsProto"]["title"]["stringValue"]
             let description = project["_fieldsProto"]["description"]["stringValue"]
             let date = project["_fieldsProto"]["created"]["stringValue"]
+            let github = project["_fieldsProto"]["github"]["stringValue"]
             let owner = project["_fieldsProto"]["creator"]["stringValue"]
             let language = project["_fieldsProto"]["language"]["stringValue"]
 
@@ -235,7 +238,8 @@ const ProjectDetails = (req, res) => {
                 date: date,
                 owner: owner,
                 language: language,
-                projectId: projectId
+                projectId: projectId,
+                github: github
             }
 
             projectObj = projectObjtemp
