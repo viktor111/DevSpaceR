@@ -43,6 +43,8 @@ const GetMain = (req, res) => {
                         let website = user["_fieldsProto"]["sebsite"]["stringValue"]
                         let projectsCreated = user["_fieldsProto"]["projectsCreated"]["arrayValue"]["values"]
                         let projectsSignedup = user["_fieldsProto"]["projectsSigned"]["arrayValue"]["values"]
+                        let projectsDeclined = user["_fieldsProto"]["projectsDeclined"]["integerValue"]
+                        console.log(projectsDeclined)
 
                         let arraySigned = Parser.ToArray(projectsSignedup)
                         let arrayCreated = Parser.ToArray(projectsCreated)
@@ -58,11 +60,15 @@ const GetMain = (req, res) => {
                         data["description"] = description;
                         data["specialty"] = specialty;
                         data["website"] = website;
+                        data["declined"] = projectsDeclined
 
 
                         res.render('User/Main', data)
                         res.end()
                     })
+                })
+                .catch(err => {
+                    console.log(err)
                 })
                
             }
